@@ -1,23 +1,19 @@
-import logo from './logo.svg';
 import './App.css';
+import AppRouter from './AppRouter';
+import { useCookies } from "react-cookie";
 
 function App() {
+  const [cookies, setCookies] = useCookies(["game"]);
+  if (cookies.game === undefined) {
+    setCookies("game", {/*TODO game status here*/}, {path: "/"});
+  }
+  function updateGameCookie(game) {
+    setCookies("game", game, {path: "/"});
+  }
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <AppRouter updateGameCookie={updateGameCookie} game={cookies.game}></AppRouter>
     </div>
   );
 }
