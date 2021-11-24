@@ -10,7 +10,21 @@
 .startbutton {
   margin: auto;
   width: 30vw;
-  height: 30vh;
+  height: 15vh;
   background-color: yellow;
-  display: none;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transform: translateY(370%);
+  border-radius: 10px;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  font-size: xx-large;
+  font-weight: bold;
+  box-shadow: 10px 10px 15px;
+}
+
+.startbutton:hover {
+  box-shadow: 10px 10px 5px;
+  background-color: rgb(199, 199, 110);
+  transition: 0.1s;
 }
