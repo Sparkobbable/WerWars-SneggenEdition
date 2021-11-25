@@ -1,0 +1,50 @@
+.background {
+  background-color: #cfad45;
+}
+
+.griditem {
+  height: 20vh;
+  border: 1px dashed #c8670b;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.griditem:active {
+  background-color: #be9a37;
+  transition: 0.05s;
+}
+
+.rotate {
+  -webkit-transform: rotate(90deg);
+  -moz-transform: rotate(90deg);
+  -o-transform: rotate(90deg);
+  -ms-transform: rotate(90deg);
+  transform: rotate(90deg);
+}
+
+.buttonimg {
+  height: 15vh;
+  width: auto;
+}
+
+.itemspacer {
+  width: 80%;
+  height: 80%;
+  border: 2px solid #c8670b;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.star {
+  background-color: #3221cf;
+}
+
+.white {
+  background-color: rgba(255, 255, 255, 0.918);
+}
+
+.box {
+  background-color: #ddcf4f;
+}

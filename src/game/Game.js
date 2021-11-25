@@ -1,44 +1,70 @@
 import { Grid } from "@mui/material";
+import "./Game.css";
+import snegge from "../assets/media/Download.png";
+import eye from "../assets/media/eye.png";
+import mouth from "../assets/media/mouth.png";
+import hand from "../assets/media/hand.png";
+import star from "../assets/media/star.png";
+import chest from "../assets/media/chest.png";
 
 export default function Game({updateGameCookie, game}) {
     return <>
         <div className="background">
-            <Grid container spacing={2}>
-                <Grid item xs={4}>
-                    Tier 1
+            <Grid container spacing={0}>
+                <Grid className="griditem" item xs={4}>
+                    <div className="itemspacer white">
+                        <img src={eye} alt="eye" className="rotate buttonimg" style={{height: "9vh"}}/>
+                    </div>
                 </Grid>
-                <Grid item xs={4}>
-                    Tier 2
+                <Grid className="griditem" item xs={4}>
+                    <img src={snegge} alt="snegge" className="rotate buttonimg" />
                 </Grid>
-                <Grid item xs={4}>
-                    Tier 3
+                <Grid className="griditem" item xs={4}>
+                    <img src={snegge} alt="snegge" className="rotate buttonimg" />
                 </Grid>
-                <Grid item xs={4}>
-                    Tier 4
+                <Grid className="griditem" item xs={4}>
+                    <div className="itemspacer white">
+                        <img src={mouth} alt="snegge" className="rotate buttonimg" />
+                    </div>
                 </Grid>
-                <Grid item xs={4}>
-                    Tier 5
+                <Grid className="griditem" item xs={4}>
+                    <img src={snegge} alt="snegge" className="rotate buttonimg" />
                 </Grid>
-                <Grid item xs={4}>
-                    Tier 6
+                <Grid className="griditem" item xs={4}>
+                    <img src={snegge} alt="snegge" className="rotate buttonimg" />
                 </Grid>
-                <Grid item xs={4}>
-                    Tier 7
+                <Grid className="griditem" item xs={4}>
+                    <div className="itemspacer white">
+                        <img src={hand} alt="snegge" className="rotate buttonimg" style={{height: "14vh"}}/>
+                    </div>
                 </Grid>
-                <Grid item xs={4}>
-                    Tier 8
+                <Grid className="griditem" item xs={4}>
+                    <img src={snegge} alt="snegge" className="rotate buttonimg" />
                 </Grid>
-                <Grid item xs={4}>
-                    Tier 9
+                <Grid className="griditem" item xs={4}>
+                    <img src={snegge} alt="snegge" className="rotate buttonimg" />
                 </Grid>
-                <Grid item xs={4}>
-                    Tier 10
+                <Grid className="griditem" item xs={4}>
+                    <div className="itemspacer star">
+                        <img src={star} alt="snegge" className="rotate buttonimg" />
+                    </div>
                 </Grid>
-                <Grid item xs={4}>
-                    Tier 11
+                <Grid className="griditem" item xs={4}>
+                    <img src={snegge} alt="snegge" className="rotate buttonimg" />
                 </Grid>
-                <Grid item xs={4}>
-                    Tier 12
+                <Grid className="griditem" item xs={4}>
+                    <img src={snegge} alt="snegge" className="rotate buttonimg" />
+                </Grid>
+                <Grid className="griditem" item xs={4}>
+                    <div className="itemspacer box">
+                        <img src={chest} alt="snegge" className="rotate buttonimg"  style={{height: "13vh"}}/>
+                    </div>
+                </Grid>
+                <Grid className="griditem" item xs={4}>
+                    <img src={snegge} alt="snegge" className="rotate buttonimg" />
+                </Grid>
+                <Grid className="griditem" item xs={4}>
+                    <img src={snegge} alt="snegge" className="rotate buttonimg" />
                 </Grid>
             </Grid>
         </div>
