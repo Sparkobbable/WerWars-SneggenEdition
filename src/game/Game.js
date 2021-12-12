@@ -12,6 +12,10 @@ export default function Game({updateGameCookie, game}) {
     const [selectedAnimal, setSelectedAnimal] = useState("");
 
     const duFindestAudio = new Audio("url");
+    const ichMoechteAudio = new Audio("url");
+    const ichHabeFolgendesGesehenAudio = new Audio("url");
+    const gutGemachtAudio = new Audio("url");
+    const verdaechtigeAusschliessen = new Audio("url");
 
     function onAnimalClick(animal) {
         setSelectedAnimal(animal);
@@ -20,14 +24,26 @@ export default function Game({updateGameCookie, game}) {
     function onActionClick(action) {
         switch(action) {
             case "eye":
-                let item = game.itemsForAnimals[selectedAnimal];
+                //TODO: empty search
+                var item = game.itemsForAnimals[selectedAnimal];
                 duFindestAudio.play();
                 game.audioForItems[item].play();
                 game.increaseRound();
                 break;
             case "mouth": 
+                ichMoechteAudio.play();
+                var item = game.itemsWantedByAnimals[selectedAnimal];
+                game.audioForItems[item].play();
                 break;
             case "hand":
+                var item = game.itemsWantedByAnimals[selectedAnimal];
+                if (game.foundItems.contains(item)) {
+                    ichHabeFolgendesGesehenAudio.play();
+                    game.hintAudioForAnimals[selectedAnimal].play();
+                    gutGemachtAudio.play();
+                    verdaechtigeAusschliessen.play();
+                    game.increaseRound();
+                }
                 break;
             case "star":
                 break;

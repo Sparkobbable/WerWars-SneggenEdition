@@ -11,6 +11,7 @@ function App() {
     game.round = 0;
     game.foundItems = [];
     game.itemsForAnimals = randomizeItemsAndAnimals();
+    game.itemsWantedByAnimals = randomizeItemsAndAnimals();
     game.audioForItems = setAudiosForItems();
     setCookies("game", game, {path: "/"});
   }
