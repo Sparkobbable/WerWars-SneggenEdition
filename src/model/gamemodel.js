@@ -5,6 +5,7 @@ export class GameModel {
     itemsWantedByAnimals;
     audioForItems;
     hintAudioForAnimals;
+    thief;
     time;
 
     increaseRound() {
