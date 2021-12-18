@@ -1,7 +1,7 @@
 .cover {
   width: 100vw;
   height: 100vh;
-  background-image: url("../assets/media/cover-initial.jpeg");
+  background-image: url("/src/assets/media/cover-initial.jpeg");
   background-repeat: no-repeat;
   background-size: cover;
   background-position: center;
