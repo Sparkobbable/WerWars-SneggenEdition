@@ -1,3 +1,4 @@
+/* eslint-disable no-redeclare */
 import { Grid } from "@mui/material";
 import "./Game.css";
 import snegge from "../assets/media/Download.png";

@@ -7,6 +7,14 @@ export default function Start({updateGameCookie, game}) {
     const startingAudio = new Audio(startingAudioFile);
 
     function startGame() {
+        var body = document.body;
+        if (body.requestFullscreen) {
+            body.requestFullscreen();
+        } else if (body.mozRequestFullScreen) {
+            body.mozRequestFullScreen();
+        } else if (body.webkitRequestFullscreen) {
+            body.webkitRequestFullscreen();
+        }
         startingAudio.play();
         history.push("/game");
     }
