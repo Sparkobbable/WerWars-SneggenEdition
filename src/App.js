@@ -5,14 +5,14 @@ import { GameModel } from './model/gamemodel';
 
 function App() {
   const [cookies, setCookies] = useCookies(["game"]);
-  const items = ["item1","item2","item3","item4","item5","item6","item7","item8","item9","item10"];
-  const animals = ["animal1","animal2","animal3","animal4","animal5","animal6","animal7","animal8","animal9","animal10"];
+  const items = ["bananenbrot","kekse","kugel","lasagne","milchreis","reste","salzstangen","sandwich","zimtsneggen","item10"];
+  const animals = ["eva","giraffe","maschka","merle","ver","patrick","rasselkalle","siri","spongebob","theo"];
   if (cookies.game) {
     let game = new GameModel();
     game.round = 0;
     game.foundItems = [];
-    game.audioForItems = setAudiosForItems();
     game.itemsForAnimals = randomizeItemsAndAnimals();
+    game.audioForItems = setAudiosForItems(game);
     game.itemsWantedByAnimals = randomizeItemsAndAnimals();
     game.thief = pickRandThief();
     game.hintAudioForAnimals(setHintsByThief(game.thief));
@@ -25,27 +25,27 @@ function App() {
   function setHintsByThief(thief) {
     var hintsByAnimals = {};
     switch (thief) {
-      case "animal1":
+      case "eva":
         var hints = [new Audio("hint1"), new Audio("hint2"), new Audio("hint3"), new Audio("hint4"), new Audio("hint5"), new Audio("hint6"), new Audio("hint7"), new Audio("hint8"), new Audio("hint9"), new Audio("hint10")];
         animals.forEach((animal) => setItemForKey(animal, hints.splice(Math.floor(Math.random() * animals.length), 1)[0], hintsByAnimals));
         return hintsByAnimals;
-      case "animal2":
+      case "giraffe":
         break;
-      case "animal3":
+      case "maschka":
         break;
-      case "animal4":
+      case "merle":
         break;
-      case "animal5":
+      case "ver":
         break;
-      case "animal6":
+      case "patrick":
         break;
-      case "animal7":
+      case "rasselkalle":
         break;
-      case "animal8":
+      case "siri":
         break;
-      case "animal9":
+      case "spongebob":
         break;
-      case "animal10":
+      case "theo":
         break;
       default:
         break;
@@ -57,9 +57,13 @@ function App() {
     return animals[Math.floor(Math.random() * animals.length)];
   }
 
-  function setAudiosForItems() {
+  function setAudiosForItems(game) {
     var audiosByItems = {};
-    items.forEach((item) => setItemForKey(item, new Audio("url" + item), audiosByItems));
+    let i = 0;
+    items.forEach((item) => {
+      var itemAudioFile = import('./assets/audio/wer_wars/' + animals[i] + '/' + animals[i] + ' Essen/' + animals[i] + ' ' + item);
+      setItemForKey(item, new Audio(itemAudioFile), audiosByItems);
+    });
     return audiosByItems;
   }
   
