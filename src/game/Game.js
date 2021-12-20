@@ -1,3 +1,4 @@
+/* eslint-disable eqeqeq */
 /* eslint-disable no-redeclare */
 import { Grid } from "@mui/material";
 import "./Game.css";
@@ -8,42 +9,70 @@ import hand from "../assets/media/hand.png";
 import star from "../assets/media/star.png";
 import chest from "../assets/media/chest.png";
 import { useState } from "react";
+import beep from '../assets/audio/beep-29.wav';
 
 export default function Game({updateGameCookie, game}) {
     const [selectedAnimal, setSelectedAnimal] = useState("");
+    const [asked, setAsked] = useState(false);
 
-    const duFindestAudio = new Audio("url");
-    const ichMoechteAudio = new Audio("url");
+    // const duFindestAudio = new Audio("url");
     const ichHabeFolgendesGesehenAudio = new Audio("url");
     const gutGemachtAudio = new Audio("url");
     const verdaechtigeAusschliessen = new Audio("url");
+    const beepAudio = new Audio(beep);
 
     function onAnimalClick(animal) {
+        beepAudio.play()
+        setAsked(false);
         setSelectedAnimal(animal);
+    }
+
+    function audioForAnimalAndItem(animal, item) {
+        var audioImport =  import('../assets/audio/wer_wars/' + animal + '/' + animal + ' essen/' + animal + ' ' + item + '.wav');
+        return new Audio(audioImport);
+    }
+
+    function introAudioForAnimal(animal) {
+        if (animal == "siri") { return }
+        let audioImport = import('../assets/audio/wer_wars/' + animal + '/' + animal + ' anfang.wav');
+        return new Audio(audioImport);
     }
 
     function onActionClick(action) {
         switch(action) {
             case "eye":
+                if (selectedAnimal == "siri") {break}
                 //TODO: empty search
                 var item = game.itemsForAnimals[selectedAnimal];
-                duFindestAudio.play();
-                game.audioForItems[item].play();
-                game.increaseRound();
+                // todo: aufnehmen: duFindestAudio.play();
+                audioForAnimalAndItem(selectedAnimal, item).play();
+                game.round++;
                 break;
             case "mouth": 
-                ichMoechteAudio.play();
+                if (selectedAnimal == "siri") {break}
+                introAudioForAnimal(selectedAnimal).play();
+                if (selectedAnimal != "theo" && selectedAnimal != "rasselkalle") {
+                    var ichMoechteAudio = import('../assets/audio/wer_wars/' + selectedAnimal + '/' + selectedAnimal + ' ich möchte.wav');
+                    new Audio(ichMoechteAudio).play();
+                }
                 var item = game.itemsWantedByAnimals[selectedAnimal];
-                game.audioForItems[item].play();
+                audioForAnimalAndItem(selectedAnimal, item).play();
+                setAsked(true);
+                game.round++;
                 break;
             case "hand":
-                var item = game.itemsWantedByAnimals[selectedAnimal];
-                if (game.foundItems.contains(item)) {
-                    ichHabeFolgendesGesehenAudio.play();
-                    game.hintAudioForAnimals[selectedAnimal].play();
-                    gutGemachtAudio.play();
-                    verdaechtigeAusschliessen.play();
-                    game.increaseRound();
+                if (selectedAnimal == "siri") {break}
+                if (asked) {
+                    var item = game.itemsWantedByAnimals[selectedAnimal];
+                    if (game.foundItems.contains(item)) {
+                        ichHabeFolgendesGesehenAudio.play();
+                        game.hintAudioForAnimals[selectedAnimal].play();
+                        gutGemachtAudio.play();
+                        verdaechtigeAusschliessen.play();
+                        game.round++;
+                    }
+                } else {
+                    //todo
                 }
                 break;
             case "star":
@@ -69,55 +98,55 @@ export default function Game({updateGameCookie, game}) {
                         <img src={eye} alt="eye" className="rotate buttonimg" style={{height: "9vh"}}/>
                     </div>
                 </Grid>
-                <Grid className="griditem" item xs={4} onClick={(e) => onAnimalClick("animal1")}>
-                    <img src={snegge} alt="snegge" className="rotate buttonimg" />
+                <Grid className="griditem" item xs={4} onClick={(e) => onAnimalClick("eva")}>
+                    <img src={snegge} alt="eva" className="rotate buttonimg" />
                 </Grid>
-                <Grid className="griditem" item xs={4}>
-                    <img src={snegge} alt="snegge" className="rotate buttonimg" />
+                <Grid className="griditem" item xs={4} onClick={(e) => onAnimalClick("giraffe")}>
+                    <img src={snegge} alt="giraffe" className="rotate buttonimg" />
                 </Grid>
                 <Grid className="griditem" item xs={4} onClick={(e) => onActionClick("mouth")}>
                     <div className="itemspacer white">
-                        <img src={mouth} alt="snegge" className="rotate buttonimg" />
+                        <img src={mouth} alt="mouth" className="rotate buttonimg" />
                     </div>
                 </Grid>
-                <Grid className="griditem" item xs={4}>
-                    <img src={snegge} alt="snegge" className="rotate buttonimg" />
+                <Grid className="griditem" item xs={4} onClick={(e) => onAnimalClick("maschka")}>
+                    <img src={snegge} alt="maschka" className="rotate buttonimg" />
                 </Grid>
-                <Grid className="griditem" item xs={4}>
-                    <img src={snegge} alt="snegge" className="rotate buttonimg" />
+                <Grid className="griditem" item xs={4} onClick={(e) => onAnimalClick("merle")}>
+                    <img src={snegge} alt="merle" className="rotate buttonimg" />
                 </Grid>
                 <Grid className="griditem" item xs={4} onClick={(e) => onActionClick("hand")}>
                     <div className="itemspacer white">
-                        <img src={hand} alt="snegge" className="rotate buttonimg" style={{height: "14vh"}}/>
+                        <img src={hand} alt="hand" className="rotate buttonimg" style={{height: "14vh"}}/>
                     </div>
                 </Grid>
-                <Grid className="griditem" item xs={4}>
-                    <img src={snegge} alt="snegge" className="rotate buttonimg" />
+                <Grid className="griditem" item xs={4} onClick={(e) => onAnimalClick("ver")}>
+                    <img src={snegge} alt="ver" className="rotate buttonimg" />
                 </Grid>
-                <Grid className="griditem" item xs={4}>
-                    <img src={snegge} alt="snegge" className="rotate buttonimg" />
+                <Grid className="griditem" item xs={4} onClick={(e) => onAnimalClick("patrick")}>
+                    <img src={snegge} alt="patrick" className="rotate buttonimg" />
                 </Grid>
                 <Grid className="griditem" item xs={4} onClick={(e) => onActionClick("star")}>
                     <div className="itemspacer star">
-                        <img src={star} alt="snegge" className="rotate buttonimg" />
+                        <img src={star} alt="star" className="rotate buttonimg" />
                     </div>
                 </Grid>
-                <Grid className="griditem" item xs={4}>
-                    <img src={snegge} alt="snegge" className="rotate buttonimg" />
+                <Grid className="griditem" item xs={4} onClick={(e) => onAnimalClick("rasselkalle")}>
+                    <img src={snegge} alt="rasselkalle" className="rotate buttonimg" />
                 </Grid>
-                <Grid className="griditem" item xs={4}>
-                    <img src={snegge} alt="snegge" className="rotate buttonimg" />
+                <Grid className="griditem" item xs={4} onClick={(e) => onAnimalClick("siri")}>
+                    <img src={snegge} alt="siri" className="rotate buttonimg" />
                 </Grid>
                 <Grid className="griditem" item xs={4} onClick={(e) => onActionClick("chest")}>
                     <div className="itemspacer box">
-                        <img src={chest} alt="snegge" className="rotate buttonimg"  style={{height: "13vh"}}/>
+                        <img src={chest} alt="chest" className="rotate buttonimg"  style={{height: "13vh"}}/>
                     </div>
                 </Grid>
-                <Grid className="griditem" item xs={4}>
-                    <img src={snegge} alt="snegge" className="rotate buttonimg" />
+                <Grid className="griditem" item xs={4} onClick={(e) => onAnimalClick("theo")}>
+                    <img src={snegge} alt="theo" className="rotate buttonimg" />
                 </Grid>
-                <Grid className="griditem" item xs={4}>
-                    <img src={snegge} alt="snegge" className="rotate buttonimg" />
+                <Grid className="griditem" item xs={4} onClick={(e) => onAnimalClick("spongebob")}>
+                    <img src={snegge} alt="spongebob" className="rotate buttonimg" />
                 </Grid>
             </Grid>
         </div>

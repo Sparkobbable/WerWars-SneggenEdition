@@ -7,8 +7,4 @@ export class GameModel {
     hintAudioForAnimals;
     thief;
     time;
-
-    increaseRound() {
-        this.round += 1;
-    }
 }
