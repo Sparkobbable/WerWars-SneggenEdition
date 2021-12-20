@@ -1,6 +1,6 @@
 import "./Start.css";
 import { useHistory } from "react-router";
-import startingAudioFile from '../assets/audio/wer_wars/Tiger/tiger_anfang.wav';
+import startingAudioFile from '../assets/audio/wer_wars/tiger/tiger_anfang.wav';
 
 export default function Start({updateGameCookie, game}) {
     const history = useHistory();

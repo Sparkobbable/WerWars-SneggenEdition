@@ -5,7 +5,7 @@ import { GameModel } from './model/gamemodel';
 
 function App() {
   const [cookies, setCookies] = useCookies(["game"]);
-  const items = ["bananenbrot","kekse","kugel","lasagne","milchreis","reste","salzstangen","sandwich","zimtsneggen","item10"];
+  const items = ["bananenbrot","kekse","kugel","lasagne","milchreis","reste","salzstangen","sandwich","zimtsneggen"];
   const animals = ["eva","giraffe","maschka","merle","ver","patrick","rasselkalle","siri","spongebob","theo"];
   if (cookies.game) {
     let game = new GameModel();
@@ -15,11 +15,12 @@ function App() {
     game.audioForItems = setAudiosForItems(game);
     game.itemsWantedByAnimals = randomizeItemsAndAnimals();
     game.thief = pickRandThief();
-    game.hintAudioForAnimals(setHintsByThief(game.thief));
-    setCookies("game", game, {path: "/"});
+    game.hintAudioForAnimals = setHintsByThief(game.thief);
+    updateGameCookie(game);
   }
   function updateGameCookie(game) {
     setCookies("game", game, {path: "/"});
+    setCookies("game", game, {path: "/game"});
   }
 
   function setHintsByThief(thief) {
@@ -61,7 +62,7 @@ function App() {
     var audiosByItems = {};
     let i = 0;
     items.forEach((item) => {
-      var itemAudioFile = import('./assets/audio/wer_wars/' + animals[i] + '/' + animals[i] + ' Essen/' + animals[i] + ' ' + item);
+      var itemAudioFile = import('./assets/audio/wer_wars/' + animals[i] + '/' + animals[i] + ' essen/' + animals[i] + ' ' + item + '.wav');
       setItemForKey(item, new Audio(itemAudioFile), audiosByItems);
     });
     return audiosByItems;
@@ -69,7 +70,8 @@ function App() {
   
   function randomizeItemsAndAnimals() {
     var itemsByAnimals = {};
-    animals.forEach((animal) => setItemForKey(animal, items.splice(Math.floor(Math.random() * items.length), 1)[0], itemsByAnimals))
+    // eslint-disable-next-line
+    animals.forEach((animal) => animal == "siri" ? console.log("siri") : setItemForKey(animal, items.splice(Math.floor(Math.random() * items.length), 1)[0], itemsByAnimals));
     console.log(itemsByAnimals);
     return itemsByAnimals;
   }
