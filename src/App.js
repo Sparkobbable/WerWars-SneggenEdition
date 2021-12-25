@@ -1,3 +1,4 @@
+/* eslint-disable eqeqeq */
 import './App.css';
 import AppRouter from './AppRouter';
 import { useCookies } from "react-cookie";
@@ -5,14 +6,13 @@ import { GameModel } from './model/gamemodel';
 
 function App() {
   const [cookies, setCookies] = useCookies(["game"]);
-  const items = ["bananenbrot","kekse","kugel","lasagne","milchreis","reste","salzstangen","sandwich","zimtsneggen"];
-  const animals = ["eva","giraffe","maschka","merle","ver","patrick","rasselkalle","siri","spongebob","theo"];
+  var items = ["bananenbrot","kekse","kugeln","lasagne","milchreis","reste","salzstangen","sandwich","zimtsneggen"];
+  const animals = ["eva","giraffe","maschka","merle","ver","patrick","rasselkalle","spongebob","theo","siri"];
   if (cookies.game) {
     let game = new GameModel();
     game.round = 0;
     game.foundItems = [];
     game.itemsForAnimals = randomizeItemsAndAnimals();
-    game.audioForItems = setAudiosForItems(game);
     game.itemsWantedByAnimals = randomizeItemsAndAnimals();
     game.thief = pickRandThief();
     game.hintAudioForAnimals = setHintsByThief(game.thief);
@@ -22,6 +22,7 @@ function App() {
     setCookies("game", game, {path: "/"});
     setCookies("game", game, {path: "/game"});
   }
+
 
   function setHintsByThief(thief) {
     var hintsByAnimals = {};
@@ -57,22 +58,13 @@ function App() {
   function pickRandThief() {
     return animals[Math.floor(Math.random() * animals.length)];
   }
-
-  function setAudiosForItems(game) {
-    var audiosByItems = {};
-    let i = 0;
-    items.forEach((item) => {
-      var itemAudioFile = import('./assets/audio/wer_wars/' + animals[i] + '/' + animals[i] + ' essen/' + animals[i] + ' ' + item + '.wav');
-      setItemForKey(item, new Audio(itemAudioFile), audiosByItems);
-    });
-    return audiosByItems;
-  }
   
   function randomizeItemsAndAnimals() {
     var itemsByAnimals = {};
-    // eslint-disable-next-line
+    let itemsClone = [...items];
     animals.forEach((animal) => animal == "siri" ? console.log("siri") : setItemForKey(animal, items.splice(Math.floor(Math.random() * items.length), 1)[0], itemsByAnimals));
     console.log(itemsByAnimals);
+    items = itemsClone
     return itemsByAnimals;
   }
 
