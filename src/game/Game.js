@@ -32,16 +32,16 @@ export default function Game({updateGameCookie, game}) {
 
     async function audioForAnimalAndItem(animal, item) {
         var audioImport = await import(`../assets/audio/wer_wars/${animal}/${animal} essen/${animal} ${item}.wav`);
-        new Audio(audioImport.default).play();
+        return new Audio(audioImport.default).play();
     }
 
-    function introAudioForAnimal(animal) {
+    async function introAudioForAnimal(animal) {
         if (animal == "siri") { return }
-        let audioImport = import(`../assets/audio/wer_wars/${animal}/${animal} anfang.wav`);
-        new Audio(audioImport.default).play();
+        let audioImport = await import(`../assets/audio/wer_wars/${animal}/${animal} anfang.wav`);
+        return new Audio(audioImport.default).play();
     }
 
-    function onActionClick(action) {
+    async function onActionClick(action) {
         switch(action) {
             case "eye":
                 if (selectedAnimal == "siri") {break}
@@ -49,17 +49,19 @@ export default function Game({updateGameCookie, game}) {
                 var item = game.itemsForAnimals[selectedAnimal];
                 // todo: aufnehmen: duFindestAudio.play();
                 audioForAnimalAndItem(selectedAnimal, item);
+                game.foundItems.push(item);
+                updateGameCookie(game);
                 game.round++;
                 break;
             case "mouth": 
                 if (selectedAnimal == "siri") {break}
                 introAudioForAnimal(selectedAnimal);
                 if (selectedAnimal != "theo" && selectedAnimal != "rasselkalle") {
-                    var ichMoechteAudio = import(`../assets/audio/wer_wars/${selectedAnimal}/${selectedAnimal} ich möchte.wav`);
+                    var ichMoechteAudio = await import(`../assets/audio/wer_wars/${selectedAnimal}/${selectedAnimal} ich möchte.wav`);
                     new Audio(ichMoechteAudio.default).play();
                 }
                 var item = game.itemsWantedByAnimals[selectedAnimal];
-                audioForAnimalAndItem(selectedAnimal, item).play();
+                audioForAnimalAndItem(selectedAnimal, item);
                 setAsked(true);
                 game.round++;
                 break;
