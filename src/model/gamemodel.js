@@ -4,7 +4,7 @@ export class GameModel {
     itemsForAnimals;
     itemsWantedByAnimals;
     audioForItems;
-    hintAudioForAnimals;
+    hintsForAnimals;
     thief;
     time;
 }
