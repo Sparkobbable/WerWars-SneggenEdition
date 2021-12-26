@@ -32,13 +32,13 @@ export default function Game({updateGameCookie, game}) {
 
     async function audioForAnimalAndItem(animal, item) {
         var audioImport = await import(`../assets/audio/wer_wars/${animal}/${animal} essen/${animal} ${item}.wav`);
-        new Audio(audioImport).play();
+        new Audio(audioImport.default).play();
     }
 
     function introAudioForAnimal(animal) {
         if (animal == "siri") { return }
-        let audioImport = import('../assets/audio/wer_wars/' + animal + '/' + animal + ' anfang.wav');
-        return new Audio(audioImport);
+        let audioImport = import(`../assets/audio/wer_wars/${animal}/${animal} anfang.wav`);
+        new Audio(audioImport.default).play();
     }
 
     function onActionClick(action) {
@@ -53,10 +53,10 @@ export default function Game({updateGameCookie, game}) {
                 break;
             case "mouth": 
                 if (selectedAnimal == "siri") {break}
-                introAudioForAnimal(selectedAnimal).play();
+                introAudioForAnimal(selectedAnimal);
                 if (selectedAnimal != "theo" && selectedAnimal != "rasselkalle") {
-                    var ichMoechteAudio = import('../assets/audio/wer_wars/' + selectedAnimal + '/' + selectedAnimal + ' ich möchte.wav');
-                    new Audio(ichMoechteAudio).play();
+                    var ichMoechteAudio = import(`../assets/audio/wer_wars/${selectedAnimal}/${selectedAnimal} ich möchte.wav`);
+                    new Audio(ichMoechteAudio.default).play();
                 }
                 var item = game.itemsWantedByAnimals[selectedAnimal];
                 audioForAnimalAndItem(selectedAnimal, item).play();
