@@ -8,51 +8,65 @@ function App() {
   const [cookies, setCookies] = useCookies(["game"]);
   var items = ["bananenbrot","kekse","kugeln","lasagne","milchreis","reste","salzstangen","sandwich","zimtsneggen"];
   const animals = ["eva","giraffe","maschka","merle","ver","patrick","rasselkalle","spongebob","theo","siri"];
-  if (cookies.game) {
+  if (!cookies.game) {
     let game = new GameModel();
     game.round = 0;
     game.foundItems = [];
     game.itemsForAnimals = randomizeItemsAndAnimals();
     game.itemsWantedByAnimals = randomizeItemsAndAnimals();
     game.thief = pickRandThief();
-    game.hintAudioForAnimals = setHintsByThief(game.thief);
+    game.hintsForAnimals = setHintsByThief(game.thief);
     updateGameCookie(game);
+    console.log("new game:");
+    console.log(game);
   }
   function updateGameCookie(game) {
     setCookies("game", game, {path: "/"});
-    setCookies("game", game, {path: "/game"});
+    console.log("cookies:");
+    console.log(cookies.game);
+    // setCookies("game", game, {path: "/game"});
   }
 
 
   function setHintsByThief(thief) {
     var hintsByAnimals = {};
+    var hints;
     switch (thief) {
       case "eva":
-        var hints = [new Audio("hint1"), new Audio("hint2"), new Audio("hint3"), new Audio("hint4"), new Audio("hint5"), new Audio("hint6"), new Audio("hint7"), new Audio("hint8"), new Audio("hint9"), new Audio("hint10")];
-        animals.forEach((animal) => setItemForKey(animal, hints.splice(Math.floor(Math.random() * animals.length), 1)[0], hintsByAnimals));
-        return hintsByAnimals;
+        hints = ["ist klein", "ist dünn", "ist frau", "schwarze schuhe", "trägt kopfbedeckung"];
+        break;
       case "giraffe":
+        hints = ["ist groß", "ist dünn", "ist mann", "schwarze schuhe"];
         break;
       case "maschka":
+        hints = ["ist groß", "ist dick", "ist frau", "schwarze schuhe", "trägt kopfbedeckung"];
         break;
       case "merle":
+        hints = ["ist groß", "ist dick", "ist mann", "schwarze schuhe", "trägt kopfbedeckung"];
         break;
       case "ver":
+        hints = ["ist groß", "ist dünn", "ist mann", "trägt kopfbedeckung"];
         break;
       case "patrick":
+        hints = ["ist groß", "ist dünn", "ist mann", "schwarze schuhe", "trägt kopfbedeckung"];
         break;
       case "rasselkalle":
+        hints = ["ist groß", "ist dünn", "ist frau", "trägt kopfbedeckung"];
         break;
       case "siri":
+        hints = ["ist groß", "ist dünn", "ist frau", "schwarze schuhe", "trägt kopfbedeckung"];
         break;
       case "spongebob":
+        hints = ["ist groß", "ist dünn", "ist frau", "schwarze schuhe"];
         break;
       case "theo":
+        hints = ["ist klein", "ist dünn", "ist mann", "schwarze schuhe", "trägt kopfbedeckung"];
         break;
       default:
         break;
     }
-    return null;
+    hints.forEach((hint) => setItemForKey(animals.splice(Math.floor(Math.random() * animals.length), 1)[0], hint, hintsByAnimals));
+    return hintsByAnimals;
   }
 
   function pickRandThief() {

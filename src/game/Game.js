@@ -11,6 +11,7 @@ import chest from "../assets/media/chest.png";
 import { useState } from "react";
 import beep from '../assets/audio/beep-29.wav';
 
+
 export default function Game({updateGameCookie, game}) {
     const [selectedAnimal, setSelectedAnimal] = useState("");
     const [asked, setAsked] = useState(false);
@@ -28,8 +29,9 @@ export default function Game({updateGameCookie, game}) {
     }
 
     function audioForAnimalAndItem(animal, item) {
-        var audioImport =  import('../assets/audio/wer_wars/' + animal + '/' + animal + ' essen/' + animal + ' ' + item + '.wav');
-        return new Audio(audioImport);
+        let path = '../assets/audio/wer_wars/' + animal + '/' + animal + ' essen/' + animal + ' ' + item + '.wav';
+        var audioImport = import(`${path}`);
+        new Audio(audioImport).play();
     }
 
     function introAudioForAnimal(animal) {
@@ -45,7 +47,7 @@ export default function Game({updateGameCookie, game}) {
                 //TODO: empty search
                 var item = game.itemsForAnimals[selectedAnimal];
                 // todo: aufnehmen: duFindestAudio.play();
-                audioForAnimalAndItem(selectedAnimal, item).play();
+                audioForAnimalAndItem(selectedAnimal, item);
                 game.round++;
                 break;
             case "mouth": 
