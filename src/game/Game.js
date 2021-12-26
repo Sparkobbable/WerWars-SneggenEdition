@@ -3,6 +3,7 @@
 import { Grid } from "@mui/material";
 import "./Game.css";
 import snegge from "../assets/media/Download.png";
+import eva from "../assets/media/animals/eva.jpeg";
 import eye from "../assets/media/eye.png";
 import mouth from "../assets/media/mouth.png";
 import hand from "../assets/media/hand.png";
@@ -30,25 +31,42 @@ export default function Game({updateGameCookie, game}) {
         setSelectedAnimal(animal);
     }
 
+    function sleep(s) {
+        return new Promise(res => {
+            setTimeout(res, s*1000);
+        });
+    }
+
     async function audioForAnimalAndItem(animal, item) {
         var audioImport = await import(`../assets/audio/wer_wars/${animal}/${animal} essen/${animal} ${item}.wav`);
-        return new Audio(audioImport.default).play();
+        let audio = new Audio(audioImport.default);
+        audio.play();
+        return audio.duration;
     }
 
     async function introAudioForAnimal(animal) {
         if (animal == "siri") { return }
         let audioImport = await import(`../assets/audio/wer_wars/${animal}/${animal} anfang.wav`);
-        return new Audio(audioImport.default).play();
+        let audio = new Audio(audioImport.default);
+        audio.play();
+        return audio.duration;
+    }
+
+    async function audioForFoundItem(item) {
+        let audioImport = await import(`../assets/audio/wer_wars/tiger/du findest/${item}.wav`);
+        let audio = new Audio(audioImport.default);
+        audio.play();
+        return audio.duration;
     }
 
     async function onActionClick(action) {
+        let item;
         switch(action) {
             case "eye":
                 if (selectedAnimal == "siri") {break}
                 //TODO: empty search
-                var item = game.itemsForAnimals[selectedAnimal];
-                // todo: aufnehmen: duFindestAudio.play();
-                audioForAnimalAndItem(selectedAnimal, item);
+                item = game.itemsForAnimals[selectedAnimal];
+                audioForFoundItem(item);
                 game.foundItems.push(item);
                 updateGameCookie(game);
                 game.round++;
@@ -56,11 +74,14 @@ export default function Game({updateGameCookie, game}) {
             case "mouth": 
                 if (selectedAnimal == "siri") {break}
                 introAudioForAnimal(selectedAnimal);
+                await sleep(4);
                 if (selectedAnimal != "theo" && selectedAnimal != "rasselkalle") {
                     var ichMoechteAudio = await import(`../assets/audio/wer_wars/${selectedAnimal}/${selectedAnimal} ich möchte.wav`);
-                    new Audio(ichMoechteAudio.default).play();
+                    let audio = new Audio(ichMoechteAudio.default);
+                    audio.play();
+                    await sleep(1);
                 }
-                var item = game.itemsWantedByAnimals[selectedAnimal];
+                item = game.itemsWantedByAnimals[selectedAnimal];
                 audioForAnimalAndItem(selectedAnimal, item);
                 setAsked(true);
                 game.round++;
@@ -68,7 +89,7 @@ export default function Game({updateGameCookie, game}) {
             case "hand":
                 if (selectedAnimal == "siri") {break}
                 if (asked) {
-                    var item = game.itemsWantedByAnimals[selectedAnimal];
+                    item = game.itemsWantedByAnimals[selectedAnimal];
                     if (game.foundItems.contains(item)) {
                         ichHabeFolgendesGesehenAudio.play();
                         game.hintAudioForAnimals[selectedAnimal].play();
@@ -104,7 +125,7 @@ export default function Game({updateGameCookie, game}) {
                     </div>
                 </Grid>
                 <Grid className="griditem" item xs={4} onClick={(e) => onAnimalClick("eva")}>
-                    <img src={snegge} alt="eva" className="rotate buttonimg" />
+                    <img src={eva} alt="eva" className="rotate buttonimg" />
                 </Grid>
                 <Grid className="griditem" item xs={4} onClick={(e) => onAnimalClick("giraffe")}>
                     <img src={snegge} alt="giraffe" className="rotate buttonimg" />
