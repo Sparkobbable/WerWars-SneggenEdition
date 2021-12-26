@@ -30,9 +30,8 @@ export default function Game({updateGameCookie, game}) {
         setSelectedAnimal(animal);
     }
 
-    function audioForAnimalAndItem(animal, item) {
-        let path = '../assets/audio/wer_wars/' + animal + '/' + animal + ' essen/' + animal + ' ' + item + '.wav';
-        var audioImport = import(`${path}`);
+    async function audioForAnimalAndItem(animal, item) {
+        var audioImport = await import(`../assets/audio/wer_wars/${animal}/${animal} essen/${animal} ${item}.wav`);
         new Audio(audioImport).play();
     }
 
