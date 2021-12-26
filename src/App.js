@@ -8,8 +8,11 @@ function App() {
   const [cookies, setCookies] = useCookies(["game"]);
   var items = ["bananenbrot","kekse","kugeln","lasagne","milchreis","reste","salzstangen","sandwich","zimtsneggen"];
   const animals = ["eva","giraffe","maschka","merle","ver","patrick","rasselkalle","spongebob","theo","siri"];
-  if (!cookies.game) {
-    let game = new GameModel();
+  var game = cookies.game;
+  console.log("initial cookie:");
+  console.log(game);
+  if (!game) {
+    game = new GameModel();
     game.round = 0;
     game.foundItems = [];
     game.itemsForAnimals = randomizeItemsAndAnimals();
@@ -20,8 +23,8 @@ function App() {
     console.log("new game:");
     console.log(game);
   }
-  function updateGameCookie(game) {
-    setCookies("game", game, {path: "/"});
+  function updateGameCookie(gameModel) {
+    setCookies("game", gameModel, {path: "/"});
     console.log("cookies:");
     console.log(cookies.game);
     // setCookies("game", game, {path: "/game"});
@@ -88,7 +91,7 @@ function App() {
 
   return (
     <div className="App">
-      <AppRouter updateGameCookie={updateGameCookie} game={cookies.game}></AppRouter>
+      <AppRouter updateGameCookie={updateGameCookie} game={game}></AppRouter>
     </div>
   );
 }

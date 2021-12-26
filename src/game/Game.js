@@ -13,6 +13,8 @@ import beep from '../assets/audio/beep-29.wav';
 
 
 export default function Game({updateGameCookie, game}) {
+    console.log("started game with model:");
+    console.log(game);
     const [selectedAnimal, setSelectedAnimal] = useState("");
     const [asked, setAsked] = useState(false);
 
