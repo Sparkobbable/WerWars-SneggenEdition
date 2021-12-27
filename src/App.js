@@ -70,6 +70,7 @@ function App() {
         break;
     }
     hints.forEach((hint) => setItemForKey(animals.splice(Math.floor(Math.random() * animals.length), 1)[0], hint, hintsByAnimals));
+    animals.forEach(animal => setItemForKey(animal, hints[Math.floor(Math.random() * hints.length)], hintsByAnimals));
     return hintsByAnimals;
   }
 

@@ -111,7 +111,7 @@ export default function Game({updateGameCookie, game}) {
             await sleep(4);
             new Audio(geistZugende).play();
             await sleep(4);
-            game.round++;
+            game.round = game.round + 1;
             updateGameCookie(game);
             return;
         }
@@ -129,8 +129,8 @@ export default function Game({updateGameCookie, game}) {
                 game.itemsForAnimals[selectedAnimal] = null;
                 audioForFoundItem(item);
                 game.foundItems.push(item);
+                game.round = game.round + 1;
                 updateGameCookie(game);
-                game.round++;
                 await sleep(2);
                 break;
             case "mouth": 
@@ -155,7 +155,7 @@ export default function Game({updateGameCookie, game}) {
                 item = game.itemsWantedByAnimals[selectedAnimal];
                 audioForAnimalAndItem(selectedAnimal, item);
                 setAsked(true);
-                game.round++;
+                game.round = game.round + 1;
                 updateGameCookie(game);
                 await sleep(2);
                 break;
@@ -173,7 +173,7 @@ export default function Game({updateGameCookie, game}) {
                             //TODO: gut gemacht audios
                         }
                         //TODO: kein hint
-                        game.round++;
+                        game.round = game.round + 1;
                         updateGameCookie(game);
                     }
                 } else {
@@ -195,7 +195,7 @@ export default function Game({updateGameCookie, game}) {
                     } else {
                         new Audio(falscheTruhe).play();
                         await sleep(4);
-                        game.round++;
+                        game.round = game.round + 1;
                         updateGameCookie(game);
                     }
                 }
@@ -203,7 +203,7 @@ export default function Game({updateGameCookie, game}) {
             default:
                 break;
         }
-        checkClock()
+        await checkClock()
         //TODO: Random Actions here
         if (chanceNumber > 7 && chanceNumber < 16) {
             new Audio(geistAnfang).play();
@@ -219,6 +219,8 @@ export default function Game({updateGameCookie, game}) {
             new Audio(feeAnfang).play();
             await sleep(3);
             new Audio(feeSchluessel).play();
+            game.keyCount++;
+            updateGameCookie(game);
             await sleep(3);
         } else if (chanceNumber > 31 && chanceNumber < 40) {
             new Audio(feeAnfang).play();
@@ -298,6 +300,7 @@ export default function Game({updateGameCookie, game}) {
             default:
                 break;
         }
+        return new Promise(res => {res()});
     }
 
     return <>
