@@ -23,6 +23,18 @@ import beep from '../assets/audio/beep-29.wav';
 import knarren from '../assets/audio/knarren.mp3';
 import gewonnen from '../assets/audio/wer_wars/tiger/tiger gewonnen.wav';
 import falscheTruhe from '../assets/audio/wer_wars/tiger/tiger falsche truhe.wav';
+import haZauberer from '../assets/audio/wer_wars/zauberer/zauberer ha ich bin der zauberer.wav';
+import zauberer6uhr from '../assets/audio/wer_wars/zauberer/zauberer um 6 uhr.wav';
+import dreiuhr from '../assets/audio/wer_wars/tiger/3 Uhr.wav';
+import glocke from '../assets/audio/glocke.wav';
+import zGewonnen from '../assets/audio/wer_wars/zauberer/zauberer gewonnen.wav';
+import geistAnfangsRaum from '../assets/audio/wer_wars/geist/geist alle wieder in den raum.wav';
+import geistAnfang from '../assets/audio/wer_wars/geist/geist anfang.wav';
+import geistZugende from '../assets/audio/wer_wars/geist/geist dein zug ist zu ende.wav';
+import geistRaum from '../assets/audio/wer_wars/geist/geist Ich gehe in deinen raum.wav';
+import feeAnfang from '../assets/audio/wer_wars/fee/fee anfang.wav';
+import feeWeitererZug from '../assets/audio/wer_wars/fee/fee mache einen weiteren zug.wav';
+import feeSchluessel from '../assets/audio/wer_wars/fee/fee nimm einen schlüssel.wav';
 
 
 export default function Game({updateGameCookie, game}) {
@@ -34,6 +46,7 @@ export default function Game({updateGameCookie, game}) {
 
     const beepAudio = new Audio(beep);
     const knarrAudio = new Audio(knarren);
+    const glockeAudio = new Audio(glocke);
 
     function onAnimalClick(animal) {
         beepAudio.play()
@@ -91,6 +104,18 @@ export default function Game({updateGameCookie, game}) {
     }
 
     async function onActionClick(action) {
+        let chanceNumber = Math.floor(Math.random() * 100);
+
+        if (chanceNumber > 0 && chanceNumber < 8) {
+            new Audio(geistAnfang).play();
+            await sleep(4);
+            new Audio(geistZugende).play();
+            await sleep(4);
+            game.round++;
+            updateGameCookie(game);
+            return;
+        }
+
         let item;
         switch(action) {
             case "eye":
@@ -99,7 +124,7 @@ export default function Game({updateGameCookie, game}) {
                 if (!item) {
                     audioForNoItemAndAnimal();
                     await sleep(2);
-                    break;
+                    return;
                 }
                 game.itemsForAnimals[selectedAnimal] = null;
                 audioForFoundItem(item);
@@ -180,10 +205,99 @@ export default function Game({updateGameCookie, game}) {
         }
         checkClock()
         //TODO: Random Actions here
+        if (chanceNumber > 7 && chanceNumber < 16) {
+            new Audio(geistAnfang).play();
+            await sleep(4);
+            new Audio(geistAnfangsRaum).play();
+            await sleep(4);
+        } else if (chanceNumber > 15 && chanceNumber < 24) {
+            new Audio(geistAnfang).play();
+            await sleep(4);
+            new Audio(geistRaum).play();
+            await sleep(5);
+        } else if (chanceNumber > 23 && chanceNumber < 32) {
+            new Audio(feeAnfang).play();
+            await sleep(3);
+            new Audio(feeSchluessel).play();
+            await sleep(3);
+        } else if (chanceNumber > 31 && chanceNumber < 40) {
+            new Audio(feeAnfang).play();
+            await sleep(3);
+            new Audio(feeWeitererZug).play();
+            await sleep(2);
+        }
     }
 
-    function checkClock() {
-        
+    async function checkClock() {
+        switch (game.round) {
+            case 4:
+                glockeAudio.play();
+                await sleep(3);
+                break;
+            case 8:
+                glockeAudio.play();
+                await sleep(3);                
+                glockeAudio.play();
+                await sleep(3);
+                break;
+            case 12: 
+                glockeAudio.play();
+                await sleep(3);
+                glockeAudio.play();
+                await sleep(3);
+                glockeAudio.play();
+                await sleep(3);
+                new Audio(haZauberer).play();
+                await sleep(7);
+                new Audio(zauberer6uhr).play();
+                await sleep(6);
+                new Audio(dreiuhr).play()
+                await sleep(5);
+                break;
+            case 16:
+                glockeAudio.play();
+                await sleep(3);
+                glockeAudio.play();
+                await sleep(3);
+                glockeAudio.play();
+                await sleep(3);
+                glockeAudio.play();
+                await sleep(3);
+                break;
+            case 20:
+                glockeAudio.play();
+                await sleep(3);
+                glockeAudio.play();
+                await sleep(3);
+                glockeAudio.play();
+                await sleep(3);
+                glockeAudio.play();
+                await sleep(3);
+                glockeAudio.play();
+                await sleep(3);
+                break;
+            case 24:
+                glockeAudio.play();
+                await sleep(3);
+                glockeAudio.play();
+                await sleep(3);
+                glockeAudio.play();
+                await sleep(3);
+                glockeAudio.play();
+                await sleep(3);
+                glockeAudio.play();
+                await sleep(3);
+                glockeAudio.play();
+                await sleep(3);
+                new Audio(haZauberer).play();
+                await sleep(7);
+                new Audio(zGewonnen).play();
+                await sleep(8);
+                history.push("/")
+                return;
+            default:
+                break;
+        }
     }
 
     return <>
