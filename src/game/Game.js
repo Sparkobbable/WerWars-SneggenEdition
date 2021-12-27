@@ -27,10 +27,6 @@ export default function Game({updateGameCookie, game}) {
     const [selectedAnimal, setSelectedAnimal] = useState("");
     const [asked, setAsked] = useState(false);
 
-    // const duFindestAudio = new Audio("url");
-    const ichHabeFolgendesGesehenAudio = new Audio("url");
-    const gutGemachtAudio = new Audio("url");
-    const verdaechtigeAusschliessen = new Audio("url");
     const beepAudio = new Audio(beep);
 
     function onAnimalClick(animal) {
@@ -67,17 +63,44 @@ export default function Game({updateGameCookie, game}) {
         return audio.duration;
     }
 
+    async function audioForNoItemAndAnimal() {
+        let audioImport = await import(`../assets/audio/wer_wars/${selectedAnimal}/${selectedAnimal} hier findest du nichts.wav`);
+        let audio = new Audio(audioImport.default);
+        audio.play();
+        return audio.duration;
+    }
+
+    async function ichHabeFolgendesGesehen() {
+        let audioImport = await import(`../assets/audio/wer_wars/${selectedAnimal}/${selectedAnimal} folgendes gesehen.wav`);
+        let audio = new Audio(audioImport.default);
+        audio.play();
+        return audio.duration;
+    }
+
+    async function hintAudioForAnimal(hint) {
+        let audioImport = await import(`../assets/audio/wer_wars/${selectedAnimal}/${selectedAnimal} merkmale/${selectedAnimal} dieb ${hint}.wav`);
+        let audio = new Audio(audioImport.default);
+        audio.play();
+        return audio.duration;
+    }
+
     async function onActionClick(action) {
         let item;
         switch(action) {
             case "eye":
                 if (selectedAnimal == "siri") {break}
-                //TODO: empty search
                 item = game.itemsForAnimals[selectedAnimal];
+                if (!item) {
+                    audioForNoItemAndAnimal();
+                    await sleep(2);
+                    break;
+                }
+                game.itemsForAnimals[selectedAnimal] = null;
                 audioForFoundItem(item);
                 game.foundItems.push(item);
                 updateGameCookie(game);
                 game.round++;
+                await sleep(2);
                 break;
             case "mouth": 
                 if (selectedAnimal == "siri") {break}
@@ -102,20 +125,28 @@ export default function Game({updateGameCookie, game}) {
                 audioForAnimalAndItem(selectedAnimal, item);
                 setAsked(true);
                 game.round++;
+                updateGameCookie(game);
+                await sleep(2);
                 break;
             case "hand":
                 if (selectedAnimal == "siri") {break}
                 if (asked) {
                     item = game.itemsWantedByAnimals[selectedAnimal];
-                    if (game.foundItems.contains(item)) {
-                        ichHabeFolgendesGesehenAudio.play();
-                        game.hintAudioForAnimals[selectedAnimal].play();
-                        gutGemachtAudio.play();
-                        verdaechtigeAusschliessen.play();
+                    if (game.foundItems.includes(item)) {
+                        let hint = game.hintsForAnimals[selectedAnimal];
+                        if (hint) {
+                            ichHabeFolgendesGesehen();
+                            await sleep(2);
+                            hintAudioForAnimal(hint);
+                            await sleep(2);
+                            //TODO: gut gemacht audios
+                        }
+                        //TODO: kein hint
                         game.round++;
+                        updateGameCookie(game);
                     }
                 } else {
-                    //todo
+                    //TODO: nicht gefragt
                 }
                 break;
             case "star":

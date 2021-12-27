@@ -11,7 +11,8 @@ function App() {
   var game = cookies.game;
   console.log("initial cookie:");
   console.log(game);
-  if (!game) {
+  console.log(window.location.pathname);
+  if (window.location.pathname == "/") {
     game = new GameModel();
     game.round = 0;
     game.foundItems = [];
@@ -27,7 +28,6 @@ function App() {
     setCookies("game", gameModel, {path: "/"});
     console.log("cookies:");
     console.log(cookies.game);
-    // setCookies("game", game, {path: "/game"});
   }
 
 
