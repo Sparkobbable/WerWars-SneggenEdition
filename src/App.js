@@ -20,6 +20,7 @@ function App() {
     game.itemsWantedByAnimals = randomizeItemsAndAnimals();
     game.thief = pickRandThief();
     game.hintsForAnimals = setHintsByThief(game.thief);
+    game.keyCount = 0;
     updateGameCookie(game);
     console.log("new game:");
     console.log(game);

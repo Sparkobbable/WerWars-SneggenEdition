@@ -18,7 +18,11 @@ import hand from "../assets/media/hand.png";
 import star from "../assets/media/star.png";
 import chest from "../assets/media/chest.png";
 import { useState } from "react";
+import { useHistory } from "react-router";
 import beep from '../assets/audio/beep-29.wav';
+import knarren from '../assets/audio/knarren.mp3';
+import gewonnen from '../assets/audio/wer_wars/tiger/tiger gewonnen.wav';
+import falscheTruhe from '../assets/audio/wer_wars/tiger/tiger falsche truhe.wav';
 
 
 export default function Game({updateGameCookie, game}) {
@@ -26,8 +30,10 @@ export default function Game({updateGameCookie, game}) {
     console.log(game);
     const [selectedAnimal, setSelectedAnimal] = useState("");
     const [asked, setAsked] = useState(false);
+    const history = useHistory();
 
     const beepAudio = new Audio(beep);
+    const knarrAudio = new Audio(knarren);
 
     function onAnimalClick(animal) {
         beepAudio.play()
@@ -152,12 +158,28 @@ export default function Game({updateGameCookie, game}) {
             case "star":
                 break;
             case "chest":
+                if (game.keyCount > 0) {
+                    game.keyCount = game.keyCount - 1;
+                    knarrAudio.play();
+                    await sleep(1);
+                    if (game.thief == selectedAnimal) {
+                        new Audio(gewonnen).play();
+                        await sleep(5);
+                        history.push("/");
+                        return;
+                    } else {
+                        new Audio(falscheTruhe).play();
+                        await sleep(4);
+                        game.round++;
+                        updateGameCookie(game);
+                    }
+                }
                 break;
             default:
                 break;
         }
         checkClock()
-        //Random Actions here
+        //TODO: Random Actions here
     }
 
     function checkClock() {
