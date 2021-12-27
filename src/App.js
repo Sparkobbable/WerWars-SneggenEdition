@@ -20,6 +20,7 @@ function App() {
     game.itemsWantedByAnimals = randomizeItemsAndAnimals();
     game.thief = pickRandThief();
     game.hintsForAnimals = setHintsByThief(game.thief);
+    game.keyCount = 0;
     updateGameCookie(game);
     console.log("new game:");
     console.log(game);
@@ -69,6 +70,7 @@ function App() {
         break;
     }
     hints.forEach((hint) => setItemForKey(animals.splice(Math.floor(Math.random() * animals.length), 1)[0], hint, hintsByAnimals));
+    animals.forEach(animal => setItemForKey(animal, hints[Math.floor(Math.random() * hints.length)], hintsByAnimals));
     return hintsByAnimals;
   }
 
