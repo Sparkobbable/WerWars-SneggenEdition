@@ -2,8 +2,16 @@
 /* eslint-disable no-redeclare */
 import { Grid } from "@mui/material";
 import "./Game.css";
-import snegge from "../assets/media/Download.png";
-import eva from "../assets/media/animals/eva.jpeg";
+import eva from "../assets/media/animals/eva.png";
+import giraffe from "../assets/media/animals/giraffe.png";
+import maschka from "../assets/media/animals/maschka.png";
+import merle from "../assets/media/animals/merle.png";
+import patrick from "../assets/media/animals/patrick.png";
+import rasselkalle from "../assets/media/animals/rasselkalle.png";
+import sb from "../assets/media/animals/sb.png";
+import siri from "../assets/media/animals/siri.png";
+import theo from "../assets/media/animals/theo.png";
+import ver from "../assets/media/animals/ver.png";
 import eye from "../assets/media/eye.png";
 import mouth from "../assets/media/mouth.png";
 import hand from "../assets/media/hand.png";
@@ -74,11 +82,20 @@ export default function Game({updateGameCookie, game}) {
             case "mouth": 
                 if (selectedAnimal == "siri") {break}
                 introAudioForAnimal(selectedAnimal);
-                await sleep(4);
+                if (selectedAnimal == "eva" || selectedAnimal == "merle" || selectedAnimal == "spongebob") {
+                    await sleep(5);
+                } else if (selectedAnimal == "ver") {
+                    await sleep(2);
+                } else {
+                    await sleep(3);
+                }
                 if (selectedAnimal != "theo" && selectedAnimal != "rasselkalle") {
                     var ichMoechteAudio = await import(`../assets/audio/wer_wars/${selectedAnimal}/${selectedAnimal} ich möchte.wav`);
                     let audio = new Audio(ichMoechteAudio.default);
                     audio.play();
+                    if (selectedAnimal == "giraffe") {
+                        await sleep(2);
+                    }
                     await sleep(1);
                 }
                 item = game.itemsWantedByAnimals[selectedAnimal];
@@ -128,18 +145,18 @@ export default function Game({updateGameCookie, game}) {
                     <img src={eva} alt="eva" className="rotate buttonimg" />
                 </Grid>
                 <Grid className="griditem" item xs={4} onClick={(e) => onAnimalClick("giraffe")}>
-                    <img src={snegge} alt="giraffe" className="rotate buttonimg" />
+                    <img src={giraffe} alt="giraffe" className="rotate buttonimg" />
                 </Grid>
                 <Grid className="griditem" item xs={4} onClick={(e) => onActionClick("mouth")}>
                     <div className="itemspacer white">
-                        <img src={mouth} alt="mouth" className="rotate buttonimg" />
+                        <img src={mouth} alt="mouth" className="rotate buttonimg" style={{height: "15vh"}}/>
                     </div>
                 </Grid>
                 <Grid className="griditem" item xs={4} onClick={(e) => onAnimalClick("maschka")}>
-                    <img src={snegge} alt="maschka" className="rotate buttonimg" />
+                    <img src={maschka} alt="maschka" className="rotate buttonimg" />
                 </Grid>
                 <Grid className="griditem" item xs={4} onClick={(e) => onAnimalClick("merle")}>
-                    <img src={snegge} alt="merle" className="rotate buttonimg" />
+                    <img src={merle} alt="merle" className="rotate buttonimg" />
                 </Grid>
                 <Grid className="griditem" item xs={4} onClick={(e) => onActionClick("hand")}>
                     <div className="itemspacer white">
@@ -147,10 +164,10 @@ export default function Game({updateGameCookie, game}) {
                     </div>
                 </Grid>
                 <Grid className="griditem" item xs={4} onClick={(e) => onAnimalClick("ver")}>
-                    <img src={snegge} alt="ver" className="rotate buttonimg" />
+                    <img src={ver} alt="ver" className="rotate buttonimg" />
                 </Grid>
                 <Grid className="griditem" item xs={4} onClick={(e) => onAnimalClick("patrick")}>
-                    <img src={snegge} alt="patrick" className="rotate buttonimg" />
+                    <img src={patrick} alt="patrick" className="rotate buttonimg" />
                 </Grid>
                 <Grid className="griditem" item xs={4} onClick={(e) => onActionClick("star")}>
                     <div className="itemspacer star">
@@ -158,10 +175,10 @@ export default function Game({updateGameCookie, game}) {
                     </div>
                 </Grid>
                 <Grid className="griditem" item xs={4} onClick={(e) => onAnimalClick("rasselkalle")}>
-                    <img src={snegge} alt="rasselkalle" className="rotate buttonimg" />
+                    <img src={rasselkalle} alt="rasselkalle" className="rotate buttonimg" />
                 </Grid>
                 <Grid className="griditem" item xs={4} onClick={(e) => onAnimalClick("siri")}>
-                    <img src={snegge} alt="siri" className="rotate buttonimg" />
+                    <img src={siri} alt="siri" className="rotate buttonimg" />
                 </Grid>
                 <Grid className="griditem" item xs={4} onClick={(e) => onActionClick("chest")}>
                     <div className="itemspacer box">
@@ -169,10 +186,10 @@ export default function Game({updateGameCookie, game}) {
                     </div>
                 </Grid>
                 <Grid className="griditem" item xs={4} onClick={(e) => onAnimalClick("theo")}>
-                    <img src={snegge} alt="theo" className="rotate buttonimg" />
+                    <img src={theo} alt="theo" className="rotate buttonimg" />
                 </Grid>
                 <Grid className="griditem" item xs={4} onClick={(e) => onAnimalClick("spongebob")}>
-                    <img src={snegge} alt="spongebob" className="rotate buttonimg" />
+                    <img src={sb} alt="spongebob" className="rotate buttonimg" />
                 </Grid>
             </Grid>
         </div>
