@@ -71,7 +71,7 @@ export default function Game({updateGameCookie, game}) {
         var audioImport = await import(`../assets/audio/wer_wars/${animal}/${animal} essen/${animal} ${item}.wav`);
         let audio = new Audio(audioImport.default);
         audio.play();
-        return audio.duration;
+        return new Promise(res => res());
     }
 
     async function introAudioForAnimal(animal) {
@@ -79,35 +79,35 @@ export default function Game({updateGameCookie, game}) {
         let audioImport = await import(`../assets/audio/wer_wars/${animal}/${animal} anfang.wav`);
         let audio = new Audio(audioImport.default);
         audio.play();
-        return audio.duration;
+        return new Promise(res => res());
     }
 
     async function audioForFoundItem(item) {
         let audioImport = await import(`../assets/audio/wer_wars/tiger/du findest/${item}.wav`);
         let audio = new Audio(audioImport.default);
         audio.play();
-        return audio.duration;
+        return new Promise(res => res());
     }
 
     async function audioForNoItemAndAnimal() {
         let audioImport = await import(`../assets/audio/wer_wars/${selectedAnimal}/${selectedAnimal} hier findest du nichts.wav`);
         let audio = new Audio(audioImport.default);
         audio.play();
-        return audio.duration;
+        return new Promise(res => res());
     }
 
     async function ichHabeFolgendesGesehen() {
         let audioImport = await import(`../assets/audio/wer_wars/${selectedAnimal}/${selectedAnimal} folgendes gesehen.wav`);
         let audio = new Audio(audioImport.default);
         audio.play();
-        return audio.duration;
+        return new Promise(res => res());
     }
 
     async function hintAudioForAnimal(hint) {
         let audioImport = await import(`../assets/audio/wer_wars/${selectedAnimal}/${selectedAnimal} merkmale/${selectedAnimal} dieb ${hint}.wav`);
         let audio = new Audio(audioImport.default);
         audio.play();
-        return audio.duration;
+        return new Promise(res => res());
     }
 
     async function onActionClick(action) {
@@ -130,13 +130,13 @@ export default function Game({updateGameCookie, game}) {
                 setIsPlaying(true);
                 item = game.itemsForAnimals[selectedAnimal];
                 if (!item) {
-                    audioForNoItemAndAnimal();
+                    await audioForNoItemAndAnimal();
                     await sleep(2);
                     setIsPlaying(false);
                     return;
                 }
                 game.itemsForAnimals[selectedAnimal] = null;
-                audioForFoundItem(item);
+                await audioForFoundItem(item);
                 game.foundItems.push(item);
                 game.round = game.round + 1;
                 updateGameCookie(game);
@@ -145,7 +145,7 @@ export default function Game({updateGameCookie, game}) {
             case "mouth": 
                 if (selectedAnimal == "siri" || isPlaying) {return}
                 setIsPlaying(true);
-                introAudioForAnimal(selectedAnimal);
+                await introAudioForAnimal(selectedAnimal);
                 if (selectedAnimal == "eva" || selectedAnimal == "merle" || selectedAnimal == "spongebob") {
                     await sleep(5);
                 } else if (selectedAnimal == "ver") {
@@ -167,12 +167,14 @@ export default function Game({updateGameCookie, game}) {
                     await sleep(1);
                 }
                 item = game.itemsWantedByAnimals[selectedAnimal];
-                audioForAnimalAndItem(selectedAnimal, item);
+                await audioForAnimalAndItem(selectedAnimal, item);
                 setAsked(true);
                 game.round = game.round + 1;
                 updateGameCookie(game);
                 if (selectedAnimal == "rasselkalle") {
                     await sleep(2);
+                } else if (selectedAnimal == "merle") {
+                    await sleep(1);
                 }
                 await sleep(2);
                 if (game.foundItems.includes(item)) {
@@ -188,12 +190,12 @@ export default function Game({updateGameCookie, game}) {
                     if (game.foundItems.includes(item)) {
                         let hint = game.hintsForAnimals[selectedAnimal];
                         if (hint) {
-                            ichHabeFolgendesGesehen();
+                            await ichHabeFolgendesGesehen();
                             if (selectedAnimal == "eva") {
                                 await sleep(2.5);
                             }
                             await sleep(2);
-                            hintAudioForAnimal(hint);
+                            await hintAudioForAnimal(hint);
                             if (selectedAnimal == "maschka" || selectedAnimal == "giraffe" || selectedAnimal == "ver") {
                                 await sleep(3);
                             } else if (selectedAnimal == "rasselkalle") {
