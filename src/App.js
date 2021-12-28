@@ -43,10 +43,10 @@ function App() {
         hints = ["ist groß", "ist dünn", "ist mann", "schwarze schuhe"];
         break;
       case "maschka":
-        hints = ["ist groß", "ist dick", "ist frau", "schwarze schuhe", "trägt kopfbedeckung"];
+        hints = ["ist groß", "ist frau", "schwarze schuhe", "trägt kopfbedeckung"];
         break;
       case "merle":
-        hints = ["ist groß", "ist dick", "ist mann", "schwarze schuhe", "trägt kopfbedeckung"];
+        hints = ["ist groß", "ist mann", "schwarze schuhe", "trägt kopfbedeckung"];
         break;
       case "ver":
         hints = ["ist groß", "ist dünn", "ist mann", "trägt kopfbedeckung"];

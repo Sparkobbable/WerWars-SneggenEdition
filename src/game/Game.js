@@ -35,6 +35,12 @@ import geistRaum from '../assets/audio/wer_wars/geist/geist Ich gehe in deinen r
 import feeAnfang from '../assets/audio/wer_wars/fee/fee anfang.wav';
 import feeWeitererZug from '../assets/audio/wer_wars/fee/fee mache einen weiteren zug.wav';
 import feeSchluessel from '../assets/audio/wer_wars/fee/fee nimm einen schlüssel.wav';
+import endCredit from '../assets/audio/wer_wars/happy birthday.wav';
+import erstFragen from '../assets/audio/wer_wars/tiger/frag doch erst.wav';
+// import gutGemacht1 from '../assets/audio/wer_wars/tiger/gut gemacht 1.wav';
+import gutGemacht2 from '../assets/audio/wer_wars/tiger/gut gemacht 2.wav';
+// import gutGemacht3 from '../assets/audio/wer_wars/tiger/gut gemacht 3.wav';
+import gutGemacht5 from '../assets/audio/wer_wars/tiger/gut gemacht 5.wav';
 
 
 export default function Game({updateGameCookie, game}) {
@@ -42,6 +48,7 @@ export default function Game({updateGameCookie, game}) {
     console.log(game);
     const [selectedAnimal, setSelectedAnimal] = useState("");
     const [asked, setAsked] = useState(false);
+    const [isPlaying, setIsPlaying] = useState(false);
     const history = useHistory();
 
     const beepAudio = new Audio(beep);
@@ -106,7 +113,7 @@ export default function Game({updateGameCookie, game}) {
     async function onActionClick(action) {
         let chanceNumber = Math.floor(Math.random() * 100);
 
-        if (chanceNumber > 0 && chanceNumber < 8) {
+        if (chanceNumber > 0 && chanceNumber < 8 && !asked) {
             new Audio(geistAnfang).play();
             await sleep(4);
             new Audio(geistZugende).play();
@@ -119,11 +126,13 @@ export default function Game({updateGameCookie, game}) {
         let item;
         switch(action) {
             case "eye":
-                if (selectedAnimal == "siri") {break}
+                if (selectedAnimal == "siri" || isPlaying) {return}
+                setIsPlaying(true);
                 item = game.itemsForAnimals[selectedAnimal];
                 if (!item) {
                     audioForNoItemAndAnimal();
                     await sleep(2);
+                    setIsPlaying(false);
                     return;
                 }
                 game.itemsForAnimals[selectedAnimal] = null;
@@ -131,15 +140,18 @@ export default function Game({updateGameCookie, game}) {
                 game.foundItems.push(item);
                 game.round = game.round + 1;
                 updateGameCookie(game);
-                await sleep(2);
+                await sleep(3);
                 break;
             case "mouth": 
-                if (selectedAnimal == "siri") {break}
+                if (selectedAnimal == "siri" || isPlaying) {return}
+                setIsPlaying(true);
                 introAudioForAnimal(selectedAnimal);
                 if (selectedAnimal == "eva" || selectedAnimal == "merle" || selectedAnimal == "spongebob") {
                     await sleep(5);
                 } else if (selectedAnimal == "ver") {
                     await sleep(2);
+                } else if (selectedAnimal == "rasselkalle") {
+                    await sleep(4);
                 } else {
                     await sleep(3);
                 }
@@ -149,6 +161,8 @@ export default function Game({updateGameCookie, game}) {
                     audio.play();
                     if (selectedAnimal == "giraffe") {
                         await sleep(2);
+                    } else if (selectedAnimal == "eva") {
+                        await sleep(1);
                     }
                     await sleep(1);
                 }
@@ -157,39 +171,74 @@ export default function Game({updateGameCookie, game}) {
                 setAsked(true);
                 game.round = game.round + 1;
                 updateGameCookie(game);
+                if (selectedAnimal == "rasselkalle") {
+                    await sleep(2);
+                }
                 await sleep(2);
+                if (game.foundItems.includes(item)) {
+                    setIsPlaying(false);
+                    return;
+                }
                 break;
             case "hand":
-                if (selectedAnimal == "siri") {break}
+                if (selectedAnimal == "siri" || isPlaying) {return}
+                setIsPlaying(true);
                 if (asked) {
                     item = game.itemsWantedByAnimals[selectedAnimal];
                     if (game.foundItems.includes(item)) {
                         let hint = game.hintsForAnimals[selectedAnimal];
                         if (hint) {
                             ichHabeFolgendesGesehen();
+                            if (selectedAnimal == "eva") {
+                                await sleep(2.5);
+                            }
                             await sleep(2);
                             hintAudioForAnimal(hint);
-                            await sleep(2);
-                            //TODO: gut gemacht audios
+                            if (selectedAnimal == "maschka" || selectedAnimal == "giraffe" || selectedAnimal == "ver") {
+                                await sleep(3);
+                            } else if (selectedAnimal == "rasselkalle") {
+                                if (hint == "schwarze schuhe") {
+                                    await sleep(2);
+                                }
+                                await sleep(4);
+                            } else {
+                               await sleep(2); 
+                            }
+                            if (hint == "ist frau" || hint == "ist mann") {
+                                new Audio(gutGemacht5).play();
+                                await sleep(4);
+                            } else {
+                                new Audio(gutGemacht2).play();
+                                await sleep(5);
+                            }
                         }
-                        //TODO: kein hint
-                        game.round = game.round + 1;
                         updateGameCookie(game);
+                    } else {
+                        setIsPlaying(false);
+                        return;
                     }
                 } else {
-                    //TODO: nicht gefragt
+                    new Audio(erstFragen).play();
+                    await sleep(2);
+                    setIsPlaying(false);
+                    return;
                 }
                 break;
             case "star":
-                break;
+                return;
             case "chest":
+                if (isPlaying) {return}
+                setIsPlaying(true);
                 if (game.keyCount > 0) {
                     game.keyCount = game.keyCount - 1;
                     knarrAudio.play();
                     await sleep(1);
                     if (game.thief == selectedAnimal) {
                         new Audio(gewonnen).play();
-                        await sleep(5);
+                        await sleep(4);
+                        new Audio(endCredit).play();
+                        await sleep(10);
+                        updateGameCookie(undefined);
                         history.push("/");
                         return;
                     } else {
@@ -198,6 +247,9 @@ export default function Game({updateGameCookie, game}) {
                         game.round = game.round + 1;
                         updateGameCookie(game);
                     }
+                } else {
+                    setIsPlaying(false);
+                    return;
                 }
                 break;
             default:
@@ -215,19 +267,22 @@ export default function Game({updateGameCookie, game}) {
             await sleep(4);
             new Audio(geistRaum).play();
             await sleep(5);
-        } else if (chanceNumber > 23 && chanceNumber < 32) {
+        } else if (chanceNumber > 23 && chanceNumber < 38) {
             new Audio(feeAnfang).play();
             await sleep(3);
             new Audio(feeSchluessel).play();
             game.keyCount++;
             updateGameCookie(game);
             await sleep(3);
-        } else if (chanceNumber > 31 && chanceNumber < 40) {
+        } else if (chanceNumber > 37 && chanceNumber < 45) {
             new Audio(feeAnfang).play();
             await sleep(3);
             new Audio(feeWeitererZug).play();
             await sleep(2);
+            game.round = game.round - 1;
+            updateGameCookie(game);
         }
+        setIsPlaying(false);
     }
 
     async function checkClock() {
@@ -295,6 +350,7 @@ export default function Game({updateGameCookie, game}) {
                 await sleep(7);
                 new Audio(zGewonnen).play();
                 await sleep(8);
+                updateGameCookie(undefined);
                 history.push("/")
                 return;
             default:
