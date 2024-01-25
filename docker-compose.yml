@@ -1,0 +1,9 @@
+version: "2"
+services:
+    werwars:
+        container_name: werwars
+        image: "ghcr.io/sparkobbable/werwars:latest"
+        volumes:
+            - "/app/node_modules"
+        ports:
+            - 100:80

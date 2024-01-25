@@ -1,0 +1,47 @@
+name: Publish image and deploy
+
+on:
+    push:
+        branches: ["master"]
+
+env:
+    REGISTRY: ghcr.io
+    IMAGE_NAME: sparkobbable/werwars:latest
+
+jobs:
+    publish:
+        name: publish image
+        runs-on: ubuntu-latest
+
+        steps:
+            - uses: actions/checkout@v3
+            - name: Login
+              run: |
+                  echo ${{ secrets.PAT }} | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+            - name: Build and Publish
+              run: |
+                  docker build . --tag ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }} --build-arg NGINX_CONF=default.conf
+                  docker push ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+
+    deploy:
+        needs: publish
+        name: deploy image
+        runs-on: ubuntu-latest
+
+        steps:
+            - name: add cloudflared
+              uses: debugci/setup-cloudflared@v1
+            - name: setup connector
+              run: sudo cloudflared service install ${{secrets.CLOUDFLARED_TUNNEL_TOKEN}}
+            - name: install id rsa
+              # check this thread to understand why its needed:
+              # <https://stackoverflow.com/a/70447517>
+              run: install -m 600 -D /dev/null ~/.ssh/id_rsa
+            - name: write private key
+              run: echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+            - name: config ssh
+              run: echo "${{ secrets.SSH_CONFIG }}" > ~/.ssh/config
+            - name: connect and pull
+              run: ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "cd ${{ secrets.WORK_DIR }}/sneggis && docker compose stop werwars && docker rmi -f ghcr.io/sparkobbable/werwars:latest && docker compose up -d && exit"
+            - name: cleanup
+              run: rm -rf ~/.ssh
